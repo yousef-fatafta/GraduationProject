@@ -1,0 +1,147 @@
+﻿@model IEnumerable<Onlink.Models.Job>
+@{
+    ViewData["Title"] = "My Jobs";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>My Jobs - Onlink</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet" />
+    <style>
+        :root {
+            --primary-color: #047123;
+            --glass-blur: 12px;
+            --glass-opacity: 0.22;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Raleway', sans-serif;
+            padding: 2rem;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, var(--glass-opacity));
+            backdrop-filter: blur(var(--glass-blur));
+            border-radius: 20px;
+            padding: 1.5rem 2rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 8px 24px rgba(31, 38, 135, 0.15);
+            align-self: center;
+            width: 74%;
+            margin-left:13%;
+        }
+
+        .job-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #333;
+
+        }
+
+        .meta {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        .btn-edit {
+            background-color: var(--primary-color);
+            border: none;
+        }
+
+            .btn-edit:hover {
+                background-color: #035a1c;
+            }
+
+        h2.page-title {
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid var(--primary-color);
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <br />
+    <div class="container">
+       
+        @if (!Model.Any())
+
+        {
+            <p class="text-muted text-center">You haven't posted any jobs yet.</p>
+        }
+        <h2 class="page-title" style=" margin-left:13%;;margin-top:20px;border-bottom: 3px solid var(--primary-color); display:inline-block;">My Jobs</h2>
+        @foreach (var job in Model)
+
+
+
+        {
+            <div class="glass-card">
+                <div class="job-title">@job.JobName
+
+                </div>
+                <a asp-controller="Dashboards" asp-action="EditJob" asp-route-id="@job.JobId"
+                         class="btn-modern-glass">
+                    <i class="fas fa-pen-to-square me-2"></i> Edit Job
+                </a>
+                
+                <div class="meta mb-2">
+                    <strong>Salary:</strong> $@job.JobSalary<br />
+                    <strong>Due Date:</strong> @job.SubmitSessionDueDate.ToShortDateString()
+                </div>
+                <p>@job.JobDescription</p>
+
+                
+                <style>
+
+
+                    .btn-modern-glass {
+                        background: rgba(4, 113, 35, 0.12);
+                        border: 1px solid rgba(4, 113, 40, 0.3);
+                        color: #035a1c;
+                        padding: 0.6rem 1.2rem;
+                        font-weight: 600;
+                        font-size: 0.9rem;
+                        border-radius: 12px;
+                        text-decoration: none;
+                        display: flex; /* تغيير من inline-flex إلى flex */
+                        justify-content: center; /* أفقياً */
+                        align-items: center; /* عمودياً */
+                        text-align: center;
+                        backdrop-filter: blur(8px);
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                        min-height: 40px; /* خيار إضافي لضمان تمركز النص إذا احتجت */
+                        width:120px;
+                        margin-left:80%;
+                        
+                        margin-top:-30px;
+
+                    }
+
+                        .btn-modern-glass:hover {
+                            background-color: #047123;
+                            color: white;
+                            box-shadow: 0 6px 18px rgba(4,113,35,0.3);
+                            transform: translateY(-2px);
+                        }
+
+                        .btn-modern-glass i {
+                            font-size: 1rem;
+                        }
+                </style>
+
+
+            </div>
+        }
+        
+    </div>
+</body>
+</html>

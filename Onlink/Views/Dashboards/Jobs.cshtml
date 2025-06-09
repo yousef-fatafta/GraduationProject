@@ -1,0 +1,435 @@
+﻿@model IEnumerable<Onlink.Models.Job>
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
+@{
+    ViewData["Title"] = "Jobs";
+
+    Layout = "_Layout";
+
+    string currentSort = ViewBag.Sort as string ?? "";
+
+    string nextSort = currentSort == "salary_desc" ? "salary_asc" : "salary_desc";
+
+    string sortLabel = currentSort == "salary_desc" ? "Sort by Salary (Low to High)" : "Sort by Salary (High to Low)";
+
+    string sortIcon = currentSort == "salary_desc" ? "fa-sort-amount-up" : "fa-sort-amount-down-alt";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - Onlink</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="page-transition">
+    <div class="container">
+    
+    <br />
+
+        <h2 class="text-center mb-4"><span style="border-bottom: 3px solid var(--primary-color); padding-bottom: 0.25rem;">Available Jobs</span></h2>
+
+        <!-- Sort -->
+        <div class="d-flex justify-content-end mb-4 gap-2">
+            <form method="get" asp-action="Jobs" asp-controller="Dashboards">
+                <input type="hidden" name="sort" value="@nextSort" />
+                <button type="submit" class="btn-modern-glass"><i class="fas @sortIcon me-2"></i>@sortLabel</button>
+            </form>
+            @if (!string.IsNullOrEmpty(currentSort))
+            {
+                <a class="btn-modern-glass" asp-action="Jobs" asp-controller="Dashboards">
+                    <i class="fas fa-times me-2"></i> Clear Sort
+                </a>
+            }
+        </div>
+
+        <!-- Job List -->
+        @foreach (var job in Model)
+
+        {
+            <div class="glass-container">
+                <div class="post-header"><i class="fas fa-briefcase me-2"></i> @job.JobName</div>
+                <div class="post-meta">
+                    <i class="fas fa-building"></i> @job.Employer?.Name •
+                    <i class="fas fa-calendar-day"></i> Due: @job.SubmitSessionDueDate.ToShortDateString()
+                </div>
+                <p class="mt-3"><strong>Description:</strong> @job.JobDescription</p>
+                <p><strong>Salary:</strong> $@job.JobSalary</p>
+
+                @if (ViewBag.UserType == "Employee" || ViewBag.UserType == "Employer")
+
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" id="__RequestVerificationToken" value="@Antiforgery.GetAndStoreTokens(Context).RequestToken" />
+                    <button type="button" class="btn-modern-glass" onclick="applyJob(@job.JobId)">
+                        <i class="fas fa-paper-plane me-2"></i> Apply Now
+                    </button>
+                }
+            </div>
+        }
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        function applyJob(jobId) {
+            const token = $('#__RequestVerificationToken').val();
+            $.ajax({
+                type: "POST",
+                url: "/Dashboards/ApplyJob",
+                headers: { "RequestVerificationToken": token },
+                data: { jobId: jobId },
+                success: function (response) {
+                    const alertBox = document.createElement("div");
+                    alertBox.className = "custom-alert" + (response.success ? "" : " error");
+                    alertBox.textContent = response.success ? "✅ Job applied successfully!" : "❌ " + response.message;
+                    document.body.appendChild(alertBox);
+                    setTimeout(() => alertBox.remove(), 2500);
+                    if (response.success) location.reload();
+                },
+                error: function () {
+                    const alertBox = document.createElement("div");
+                    alertBox.className = "custom-alert error";
+                    alertBox.textContent = "❌ Server error occurred.";
+                    document.body.appendChild(alertBox);
+                    setTimeout(() => alertBox.remove(), 2500);
+                }
+            });
+        }
+    </script>
+
+    <style>
+        :root {
+            --primary-color: #047123;
+            --glass-blur: 12px;
+            --glass-opacity: 0.25;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Raleway', sans-serif;
+            padding: 2rem;
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, var(--glass-opacity));
+            backdrop-filter: blur(var(--glass-blur));
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        }
+
+        .post-header {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .post-meta {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .btn-modern-glass {
+            background: rgba(4, 113, 35, 0.12);
+            border: 1px solid rgba(4, 113, 35, 0.3);
+            color: #035a1c;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(8px);
+         
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+            .btn-modern-glass:hover {
+                background-color: #047123;
+                color: white;
+                box-shadow: 0 6px 18px rgba(4, 113, 35, 0.3);
+              
+            }
+
+        .custom-alert {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #047123;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 16px;
+            font-size: 1.1rem;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+            z-index: 9999;
+            animation: fadeInOut 2.5s ease-in-out;
+        }
+
+            .custom-alert.error {
+                background-color: #dc3545;
+            }
+
+        @@keyframes fadeInOut {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+
+            10% {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -40%);
+            }
+        }
+    </style>
+</body>
+</html>
+
+
+<style>
+  
+
+    .btn-modern-apply {
+        background: rgba(4, 113, 35, 0.1);
+        backdrop-filter: blur(8px);
+        color: #047123;
+        font-weight: 600;
+        border: 1.5px solid #047123;
+        border-radius: 14px;
+        padding: 0.65rem 1.5rem;
+        font-size: 1rem;
+       
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        box-shadow: 0 4px 10px rgba(4, 113, 35, 0.1);
+    }
+
+        .btn-modern-apply:hover {
+            background: #047123;
+            color: #fff;
+       
+            box-shadow: 0 6px 18px rgba(4, 113, 35, 0.2);
+        }
+
+    :root {
+        --primary-color: #047123;
+        --primary-dark: #035a1c;
+        --glass-blur: 12px;
+        --glass-opacity: 0.25;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        font-family: 'Raleway', sans-serif;
+        margin: 0;
+        padding: 2rem;
+    }
+
+    .glass-container {
+        background: rgba(255, 255, 255, var(--glass-opacity));
+        backdrop-filter: blur(var(--glass-blur));
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        width: 74%;
+        margin-left: 13%;
+    }
+
+    .post-header {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: var(--primary-color);
+    }
+
+    .post-meta {
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .page-transition {
+        animation: fadeIn 0.5s ease;
+    }
+
+
+
+    /* Glass button style for sorting */
+    .btn-glass-outline {
+        background: rgba(255, 255, 255, 0.6);
+        border: 1px solid var(--primary-color);
+        color: var(--primary-color);
+        font-weight: 600;
+        padding: 0.6rem 1.2rem;
+        border-radius: 12px;
+       
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+        .btn-glass-outline:hover {
+            background: var(--primary-color);
+            color: #fff;
+           
+            box-shadow: 0 6px 12px rgba(4, 113, 35, 0.2);
+        }
+
+        .btn-glass-outline i {
+            font-size: 1rem;
+        }
+</style>
+
+<style>
+
+    .btn-modern-glass {
+        background: rgba(4, 113, 35, 0.12);
+        border: 1px solid rgba(4, 113, 35, 0.3);
+        color: #035a1c;
+        padding: 0.6rem 1.2rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border-radius: 12px;
+        text-decoration: none;
+        display: flex; /* تغيير من inline-flex إلى flex */
+        justify-content: center; /* أفقياً */
+        align-items: center; /* عمودياً */
+        text-align: center;
+        backdrop-filter: blur(8px);
+     
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        min-height: 40px; /* خيار إضافي لضمان تمركز النص إذا احتجت */
+    }
+
+        .btn-modern-glass:hover {
+            background-color: #047123;
+            color: white;
+            box-shadow: 0 6px 18px rgba(4,113,35,0.3);
+       
+        }
+
+        .btn-modern-glass i {
+            font-size: 1rem;
+        }
+</style>
+
+<style>
+    .custom-alert {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+       
+        background-color: #047123;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 16px;
+        font-size: 1.1rem;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        z-index: 9999;
+        animation: fadeInOut 2.5s ease-in-out;
+    }
+
+        .custom-alert.error {
+            background-color: #dc3545;
+        }
+
+
+
+    .modern-apply-btn {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 16px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+        .modern-apply-btn:hover {
+            background-color: #035a1c;
+            transform: scale(1.03);
+        }
+</style>
+<style>
+    .custom-alert {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        
+        background-color: #047123;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 16px;
+        font-size: 1.1rem;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        z-index: 9999;
+        
+    }
+
+        .custom-alert.error {
+            background-color: #dc3545;
+        }
+
+    .modern-apply-btn {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 16px;
+        font-weight: 600;
+     
+    }
+
+        .modern-apply-btn:hover {
+            background-color: #035a1c;
+            transform: scale(1.03);
+        }
+</style>
+<style>
+
+    .btn-modern-glass {
+        background: rgba(4, 113, 35, 0.12);
+        border: 1px solid rgba(4, 113, 35, 0.3);
+        color: #035a1c;
+        padding: 0.6rem 1.2rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border-radius: 12px;
+        text-decoration: none;
+        display: flex; /* تغيير من inline-flex إلى flex */
+        justify-content: center; /* أفقياً */
+        align-items: center; /* عمودياً */
+        text-align: center;
+        backdrop-filter: blur(8px);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        min-height: 40px; /* خيار إضافي لضمان تمركز النص إذا احتجت */
+    }
+
+        .btn-modern-glass:hover {
+            background-color: #047123;
+            color: white;
+            box-shadow: 0 6px 18px rgba(4,113,35,0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-modern-glass i {
+            font-size: 1rem;
+        }
+</style>

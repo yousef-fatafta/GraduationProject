@@ -1,0 +1,188 @@
+﻿@{
+    ViewData["Title"] = "Confirm Logout";
+
+    Layout = "_Layout";
+}
+
+<div class="container py-5 page-transition">
+    <div class="d-flex justify-content-center align-items-center min-vh-100">
+        <div class="glass-container text-center mx-auto" style="max-width: 480px;">
+            <h2 class="mb-3">
+                <span>Confirm Logout</span>
+            </h2>
+            <p class="mb-4 text-muted">Are you sure you want to log out of your account?</p>
+
+            <a asp-controller="Dashboards" asp-action="Posts" class="btn-modern-glass">No, Take me back</a>
+
+            <form asp-action="ConfirmLogout" method="post" class="d-grid gap-2">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn-glass-cancel">Yes, Logout</button>
+            </form>
+
+           
+            <style>
+                .btn-glass-cancel {
+                    width: 250px;
+                    margin-left: 15%;
+                    margin-top:27px;
+                    padding: 0.65rem 1.4rem;
+                    font-weight: 600;
+                    border-radius: 12px;
+                    border: none;
+                    transition: all 0.3s ease;
+                    text-decoration: none;
+                    display: flex; /* تغيير من inline-flex إلى flex */
+                    justify-content: center; /* أفقياً */
+                    align-items: center; /* عمودياً */
+                    text-align: center;
+                    font-size: 0.95rem;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                }
+
+                .btn-glass-cancel {
+                    background-color: rgba(200, 0, 0, 0.05);
+                    color: #aa2e2e;
+                    border: 1px solid rgba(200, 0, 0, 0.2);
+                }
+
+                    .btn-glass-cancel:hover {
+                        background-color: rgba(200, 0, 0, 0.1);
+                        color: #891e1e;
+                    }
+
+
+                .btn-modern-glass {
+                    width: 250px;
+                    margin-left: 15%;
+                    background: rgba(4, 113, 35, 0.12);
+                    border: 1px solid rgba(4, 113, 40, 0.3);
+                    color: #035a1c;
+                    padding: 0.6rem 1.2rem;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    border-radius: 12px;
+                    text-decoration: none;
+                    display: flex; /* تغيير من inline-flex إلى flex */
+                    justify-content: center; /* أفقياً */
+                    align-items: center; /* عمودياً */
+                    text-align: center;
+                    backdrop-filter: blur(8px);
+                    transition: all 0.3s ease;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                    min-height: 40px; /* خيار إضافي لضمان تمركز النص إذا احتجت */
+                }
+
+                    .btn-modern-glass:hover {
+                        background-color: #047123;
+                        color: white;
+                        box-shadow: 0 6px 18px rgba(4,113,35,0.3);
+                        transform: translateY(-2px);
+                    }
+
+                    .btn-modern-glass i {
+                        font-size: 1rem;
+                    }
+            </style>
+        </div>
+    </div>
+</div>
+<style>
+    :root {
+        --primary-color: #047123;
+        --primary-hover: #035a1c;
+        --glass-blur: 12px;
+        --glass-opacity: 0.25;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        font-family: 'Raleway', sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .glass-container {
+        background: rgba(255, 255, 255, var(--glass-opacity));
+        backdrop-filter: blur(var(--glass-blur));
+        -webkit-backdrop-filter: blur(var(--glass-blur));
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        padding: 2.5rem;
+        transition: all 0.3s ease;
+        margin-top: -160px;
+    }
+
+        .glass-container:hover {
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.25);
+        }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        transition: all 0.3s ease;
+        border-radius: 12px;
+        padding: 12px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+    }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            border-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(4, 113, 35, 0.2);
+        }
+
+    .btn-outline-secondary {
+        border-radius: 12px;
+        font-weight: 600;
+        border: 2px solid #ced4da;
+        color: #495057;
+        background-color: transparent;
+        transition: all 0.3s ease;
+    }
+
+        .btn-outline-secondary:hover {
+            background-color: #f1f3f5; /* subtle light grey */
+            color: #047123; /* your primary green for accent */
+            border-color: #047123; /* optional: green border on hover */
+        }
+
+
+    h2 span {
+        color: var(--primary-color);
+        font-weight: 700;
+    }
+
+    .page-transition {
+        animation: fadeIn 0.5s ease forwards;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .glass-container {
+            padding: 1.5rem;
+        }
+    }
+</style>
+
+
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+}
+
+

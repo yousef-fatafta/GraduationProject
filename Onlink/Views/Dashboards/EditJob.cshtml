@@ -1,0 +1,213 @@
+﻿@model Onlink.Models.Job
+@{
+    ViewData["Title"] = "Edit Job";
+
+
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - Onlink</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --primary-color: #047123;
+            --primary-dark: #035a1c;
+            --glass-blur: 12px;
+            --glass-opacity: 0.22;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Raleway', sans-serif;
+            padding: 2rem;
+        }
+
+        .glass-form {
+            background: rgba(255, 255, 255, var(--glass-opacity));
+            backdrop-filter: blur(var(--glass-blur));
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 24px rgba(31, 38, 135, 0.15);
+            padding: 2.5rem;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        h2.section-title {
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid var(--primary-color);
+            display: inline-block;
+        }
+
+        label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        input.form-control,
+        textarea.form-control,
+        select.form-control {
+            border-radius: 20px !important;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="date"] {
+            padding: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            border-radius: 20px !important;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background-color: var(--primary-dark);
+                box-shadow: 0 4px 12px rgba(4, 113, 35, 0.25);
+                transform: translateY(-2px);
+            }
+
+        .btn-danger {
+            background-color: #e74a3b;
+            border: none;
+            color: white;
+        }
+
+            .btn-danger:hover {
+                background-color: #c0392b;
+                box-shadow: 0 4px 12px rgba(231, 74, 59, 0.25);
+                transform: translateY(-2px);
+            }
+
+        .text-danger {
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-form">
+        <h2 class="section-title">Edit Job</h2>
+       
+        <form asp-action="EditJob" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="JobId" />
+
+            <div class="form-group">
+                <label asp-for="JobName"></label>
+                <input asp-for="JobName" class="form-control" />
+                <span asp-validation-for="JobName" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="JobDescription"></label>
+                <textarea asp-for="JobDescription" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="JobDescription" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="JobSalary"></label>
+                <input asp-for="JobSalary" class="form-control" />
+                <span asp-validation-for="JobSalary" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="SubmitSessionDueDate"></label>
+                <input asp-for="SubmitSessionDueDate" type="date" class="form-control" />
+                <span asp-validation-for="SubmitSessionDueDate" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <a asp-action="MyJobs" class="btn-glass-cancel">
+                    <i class="fas fa-times me-2"></i> Cancel
+                </a>
+                <button type="submit" class="btn-modern-glass">
+                    <i class="fas fa-save me-2"></i> Update
+                </button>
+               
+                <style>
+                    .btn-glass-cancel {
+                        padding: 0.65rem 1.4rem;
+                        font-weight: 600;
+                        border-radius: 12px;
+                        border: none;
+                        transition: all 0.3s ease;
+                        text-decoration: none;
+                        display: inline-flex;
+                        align-items: center;
+                        font-size: 0.95rem;
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+                    }
+
+                    .btn-glass-cancel {
+                        background-color: rgba(200, 0, 0, 0.05);
+                        color: #aa2e2e;
+                        border: 1px solid rgba(200, 0, 0, 0.2);
+                    }
+
+                        .btn-glass-cancel:hover {
+                            background-color: rgba(200, 0, 0, 0.1);
+                            color: #891e1e;
+                        }
+
+
+                    .btn-modern-glass {
+                        background: rgba(4, 113, 35, 0.12);
+                        border: 1px solid rgba(4, 113, 40, 0.3);
+                        color: #035a1c;
+                        padding: 0.6rem 1.2rem;
+                        font-weight: 600;
+                        font-size: 0.9rem;
+                        border-radius: 12px;
+                        text-decoration: none;
+                        display: flex; /* تغيير من inline-flex إلى flex */
+                        justify-content: center; /* أفقياً */
+                        align-items: center; /* عمودياً */
+                        text-align: center;
+                        backdrop-filter: blur(8px);
+                        transition: all 0.3s ease;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                        min-height: 40px; /* خيار إضافي لضمان تمركز النص إذا احتجت */
+                    }
+
+                        .btn-modern-glass:hover {
+                            background-color: #047123;
+                            color: white;
+                            box-shadow: 0 6px 18px rgba(4,113,35,0.3);
+                            transform: translateY(-2px);
+                        }
+
+                        .btn-modern-glass i {
+                            font-size: 1rem;
+                        }
+                </style>
+
+            </div>
+        </form>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

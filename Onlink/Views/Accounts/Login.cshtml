@@ -1,0 +1,261 @@
+﻿@model Onlink.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "_Layout";
+}
+
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Login - Brand</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Raleway:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
+    <style>
+
+        :root {
+            --primary-color: #047123;
+            --primary-hover: #035a1c;
+            --glass-blur: 12px;
+            --glass-opacity: 0.25;
+        }
+
+        body {
+            transition: all 0.5s ease;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center; /* Added for horizontal centering */
+            align-items: center; /* Already exists for vertical centering */
+            font-family: 'Raleway', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0; /* Remove default margin */
+            padding: 20px; /* Add some padding for mobile */
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, var(--glass-opacity));
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            margin-top:-45px;
+        }
+
+            .glass-container:hover {
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.25);
+            }
+
+        .form-control {
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            padding: 12px 15px;
+            height: 48px;
+        }
+
+            .form-control:focus {
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 0.25rem rgba(4, 113, 35, 0.15);
+                background: rgba(255, 255, 255, 0.9);
+            }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            padding: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+            .btn-primary:hover {
+                background-color: var(--primary-hover);
+                border-color: var(--primary-hover);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(4, 113, 35, 0.2);
+            }
+
+            .btn-primary:active {
+                transform: translateY(0);
+            }
+
+        .text-muted a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+            .text-muted a:hover {
+                color: var(--primary-hover);
+                text-decoration: underline;
+            }
+
+        .form-check-label {
+            color: #495057;
+            font-weight: 500;
+        }
+
+        .form-check-input {
+            width: 18px;
+            height: 18px;
+            margin-top: 0.25em;
+        }
+
+            .form-check-input:checked {
+                background-color: var(--primary-color);
+                border-color: var(--primary-color);
+            }
+
+        h2 {
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: #2d3748;
+        }
+
+            h2 span {
+                color: var(--primary-color);
+            }
+
+        .text-danger {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .page-transition {
+            animation: fadeIn 0.5s ease forwards;
+        }
+
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+            .logo-container img {
+                max-height: 400px;
+                width: auto;
+                border-radius: 20px;
+                box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+                transition: all 0.3s ease;
+            }
+
+                .logo-container img:hover {
+                    transform: scale(1.02);
+                    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
+                }
+
+        /* Responsive adjustments */
+        @@media (max-width: 768px) {
+            .glass-container {
+                padding: 1.5rem;
+            }
+
+            .logo-container {
+                margin-bottom: 2rem;
+            }
+
+                .logo-container img {
+                    max-height: 250px;
+                }
+        }
+    </style>
+</head>
+
+<body>
+    <section class="py-4 py-md-5 my-5 w-100">
+        <div class="container py-md-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <div class="glass-container">
+                        <div class="row align-items-center">
+                            <div class="col-md-6 text-center">
+                                <div class="logo-container">
+                                    <img class="img-fluid" src="~/css/logo2.jpg" alt="Logo" />
+                                </div>
+                            </div>
+                            <div class="col-md-5 col-xl-4 text-center text-md-start">
+                                <h2 class="mb-4"><span>Login</span>          </h2>
+
+                                <form asp-action="Login" method="post" asp-controller="Accounts" class="page-transition" style="animation-delay: 0.2s;">
+                                    @Html.AntiForgeryToken()
+                                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                                    <div class="mb-3">
+                                        <input asp-for="Username" class="form-control" placeholder=" UserName" />
+                                        <span asp-validation-for="Username" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <input asp-for="Password" type="password" class="form-control" placeholder="Password" />
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="form-check mb-3 d-flex align-items-center">
+                                        <input asp-for="RememberMe" class="form-check-input me-2" />
+                                        <label asp-for="RememberMe" class="form-check-label"></label>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <button type="submit" class="btn btn-primary w-100">Log in</button>
+                                    </div>
+
+                                  
+                                </form>
+                                <p class="text-muted text-center text-md-start">
+                                    Forgot your password?
+                                    <a asp-controller="Accounts" asp-action="ChangePassword">Reset it</a>
+                                </p>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Add smooth transition when navigating away from the login page
+        document.querySelector('form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            document.body.style.opacity = '0';
+            document.body.style.transform = 'translateY(10px)';
+            setTimeout(() => {
+                this.submit();
+            }, 500);
+        });
+
+        // Add dynamic blur based on scroll (optional effect)
+        window.addEventListener('scroll', function () {
+            const scrollY = window.scrollY || window.pageYOffset;
+            const blurValue = Math.min(scrollY / 50, 5);
+            document.querySelector('.glass-container').style.backdropFilter = `blur(${Math.max(12 - blurValue, 8)}px)`;
+        });
+    </script>
+</body>
+
+</html>

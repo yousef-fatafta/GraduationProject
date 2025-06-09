@@ -1,0 +1,604 @@
+﻿@model Onlink.Models.User
+@{
+    ViewData["Title"] = "Profile";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var userType = ViewData["UserType"] as string ?? "Unknown";
+
+    var profilePicture = string.IsNullOrEmpty(Model.ProfilePicturePath) ? Url.Content("~/images/default-user.png") : Url.Content(Model.ProfilePicturePath);
+}
+
+<!-- The full HTML layout starts here -->
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Onlink</title>
+    <link rel="stylesheet" href="~/css/site.css">
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="apple-touch-icon" sizes="57x57" href="/uploads/logo2.jpg" style="border-radius:30px">
+</head>
+<body>
+    <br />
+    <br />
+    <div class="profile-card animate-in">
+        <div class="profile-sidebar">
+            <div class="avatar-container">
+                <img src="@profilePicture" class="profile-avatar" alt="Profile Picture" id="avatarPreview" />
+            </div>
+            <h1 class="username delay-1">@Model.UserName</h1>
+            <div class="user-type delay-1">@Model.UserType</div>
+
+            @if (userType == "Employee" && Model.Employee != null)
+            {
+                <div class="info-item delay-2">
+                    <div class="info-label"><i class="fas fa-info-circle"></i> Bio</div>
+                    <div class="info-value">@Model.Employee.Bio</div>
+                </div>
+            }
+
+            <div class="social-links delay-2"style="margin-top:-0.01%">
+                @if (!string.IsNullOrEmpty(Model.FacebookUrl))
+                {
+                    <a href="@Model.FacebookUrl" class="social-link" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                }
+                @if (!string.IsNullOrEmpty(Model.TwitterUrl))
+                {
+                    <a href="@Model.TwitterUrl" class="social-link" title="Twitter"><i class="fab fa-twitter"></i></a>
+                }
+                @if (!string.IsNullOrEmpty(Model.GitHubUrl))
+                {
+                    <a href="@Model.GitHubUrl" class="social-link" title="GitHub"><i class="fab fa-github"></i></a>
+                }
+            </div>
+
+            <div class="mt-auto w-100 delay-3">
+                <a asp-controller="Dashboards" asp-action="MyPosts" class="btn-modern-glass"style="height:52px;width:190px;text-align:center">
+                    <i class="fas fa-layer-group"></i> My Posts
+                </a>
+            </div>
+        </div>
+
+        <div class="profile-content">
+            <h2 class="section-title delay-1 d-flex justify-content-between align-items-center">
+                <span>Personal Information</span>
+                <a asp-controller="Accounts" asp-action="Edit" class="btn-modern-glass">
+                    <i class="fas fa-user-edit me-2"></i>
+                    <span>Edit</span>
+                    
+                </a>
+            </h2>
+            <div class="info-grid">
+                <div class="info-item delay-1">
+                    <div class="info-label"><i class="fas fa-calendar-alt"></i> Member Since</div>
+                    <div class="info-value">@Model.CreatedAt.ToString("MMMM dd, yyyy")</div>
+                </div>
+
+
+                @if (Model.UserType == "Employee" && Model.Employee != null)
+
+
+
+
+
+
+
+                {
+                    <div class="info-item delay-2">
+                        <div class="info-label">
+                            <i class="fas fa-user"></i> Full Name
+                        </div>
+                        <div class="info-value">@Model.Employee.FirstName @Model.Employee.LastName</div>
+                    </div>
+
+                    <div class="info-item delay-2">
+                        <div class="info-label">
+                            <i class="fas fa-id-card"></i> Employee ID
+                        </div>
+                        <div class="info-value">EMP-@Model.Employee.UserId.ToString("D5")</div>
+                    </div>
+
+                    <div class="info-item delay-2">
+                        <div class="info-label"><i class="fas fa-envelope-open"></i> Email</div>
+                        <div class="info-value">@Model.Employee.Email</div>
+                    </div>
+
+                    <div class="info-item delay-2">
+                        <div class="info-label">
+                            <i class="fas fa-phone-alt"></i> Phone Number
+                        </div>
+                        <div class="info-value">@Model.Employee.PhoneNumber</div>
+                    </div>
+
+
+
+                    <div class="info-item delay-2">
+                        <div class="info-label"><i class="fas fa-briefcase"></i> Jobs Applied</div>
+                        <div class="info-value">@Model.Employee.JobApplications.Count()</div>
+                    </div>
+
+                    <div class="info-item delay-2">
+                        <div class="info-label"><i class="fas fa-certificate"></i> Certificates</div>
+                        <div class="info-value">@Model.Employee.Certificates.Count()</div>
+                    </div>
+
+                    <div class="info-item delay-2">
+                        <div class="info-label"><i class="fas fa-file-alt"></i> Resumes</div>
+                        <div class="info-value">@Model.Employee.Resumes.Count()</div>
+                    </div>
+                }
+
+
+
+
+
+
+
+                else if (Model.UserType == "Employer" && Model.Employer != null)
+
+
+
+
+
+
+
+                {
+                    <div class="info-item delay-2">
+                        <div class="info-label">
+                            <i class="fas fa-briefcase"></i> Employer Name
+                        </div>
+                        <div class="info-value">@Model.Employer.Name</div>
+                    </div>
+
+                    <div class="info-item delay-2">
+                        <div class="info-label"><i class="fas fa-envelope-open"></i> Email</div>
+                        <div class="info-value">@Model.Employer.Email</div>
+                    </div>
+                    <div class="info-item delay-2">
+                        <div class="info-label">
+                            <i class="fas fa-briefcase"></i> Employer Id
+                        </div>
+                        <div class="info-value">@Model.Employer.EmployerId</div>
+                    </div>
+
+                    <div class="info-item delay-2">
+                        <div class="info-label">
+                            <i class="fas fa-phone-alt"></i> Phone Number
+                        </div>
+                        <div class="info-value">@Model.Employer.PhoneNumber</div>
+                    </div>
+                    <div class="info-item delay-2">
+                        <div class="info-label"><i class="fas fa-briefcase"></i> Job Listings</div>
+                        <div class="info-value">@(Model.Employer.Jobs?.Count() ?? 0)</div>
+                    </div>
+
+                    <div class="info-item delay-2">
+                        <div class="info-label"><i class="fas fa-newspaper"></i> Posts</div>
+                        <div class="info-value">@(Model.Employer.Posts?.Count() ?? 0)</div>
+                    </div>
+
+                    <div class="info-item delay-2">
+                        <div class="info-label"><i class="fas fa-file-alt"></i> Resumes Received</div>
+                        <div class="info-value">
+                            @((Model.Employer?.Resume != null) ? Model.Employer.Resume.Count : 0)
+                        </div>
+                    </div>
+
+
+                    
+                }
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const avatarUpload = document.getElementById('avatarUpload');
+            const avatarPreview = document.getElementById('avatarPreview');
+            const avatarEditButton = document.getElementById('avatarEditButton');
+            const form = document.querySelector('form');
+
+            avatarEditButton?.addEventListener('click', () => avatarUpload?.click());
+            avatarPreview?.addEventListener('click', () => avatarUpload?.click());
+
+            avatarUpload?.addEventListener('change', function () {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        avatarPreview.src = e.target.result;
+                    }
+                    reader.readAsDataURL(this.files[0]);
+                    if (form) {
+                        const submitButton = document.createElement('button');
+                        submitButton.type = 'submit';
+                        submitButton.style.display = 'none';
+                        form.appendChild(submitButton);
+                        submitButton.click();
+                        form.removeChild(submitButton);
+                    }
+                }
+            });
+        });
+    </script>
+
+    <style>
+        :root {
+            --primary-color: #047123;`
+            --primary-dark: #035a1c;
+            --primary-light: rgba(4, 113, 35, 0.1);
+            --glass-blur: 16px;
+            --glass-opacity: 0.22;
+            --text-dark: #2d3748;
+            --text-muted: #6c757d;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.1);
+            --transition: all 0.25s cubic-bezier(0.645, 0.045, 0.355, 1);
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Raleway', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Glassmorphism Container */
+        .profile-card {
+            background: rgba(255, 255, 255, var(--glass-opacity));
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: var(--shadow-lg);
+            width: 100%;
+            max-width: 880px;
+            overflow: hidden;
+            transition: var(--transition);
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+        }
+
+            .profile-card:hover {
+                box-shadow: 0 15px 30px rgba(31, 38, 135, 0.2);
+                transform: translateY(-2px);
+            }
+
+        /* Profile Sidebar */
+        .profile-sidebar {
+            background: rgba(255, 255, 255, 0.3);
+            padding: 3rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .avatar-container {
+            position: relative;
+            margin-bottom: 1.5rem;
+            width: 120px;
+            height: 120px; /* Circle shape */
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .profile-avatar {
+            width: 100%; /* Fill the container */
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            box-shadow: var(--shadow-md);
+            transition: var(--transition);
+        }
+
+        /* Edit icon button */
+        .avatar-edit {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: var(--transition);
+            border: 2px solid white;
+        }
+
+        /* Hover effects */
+        .avatar-container:hover .avatar-edit {
+            opacity: 1;
+            transform: translateY(-5px);
+        }
+
+        .avatar-container:hover .profile-avatar {
+            transform: scale(1.03);
+        }
+
+
+        .username {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            color: var(--text-dark);
+        }
+
+        .user-type {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            transition: var(--transition);
+        }
+
+            .social-link:hover {
+                background: var(--primary-color);
+                color: white;
+                transform: translateY(-3px);
+            }
+
+        /* Profile Content */
+        .profile-content {
+            padding: 3rem 2.5rem;
+            position: relative;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid rgba(4, 113, 35, 0.1);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem; /* ↓ قلل الفجوة بين العناصر */
+            margin-bottom: 1.5rem; /* ↓ قلل المسافة أسفل الجدول */
+        }
+
+        .info-item {
+            padding: 0.75rem 1rem; /* ↓ قلل الـ padding داخل العنصر */
+            border-radius: 10px;
+            transition: var(--transition);
+            margin-bottom: 0.25rem; /* ↓ تقليل المارجن الأسفل */
+        }
+
+
+            .info-item:hover {
+                background: rgba(255, 255, 255, 0.6);
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-sm);
+            }
+
+        .info-label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.875rem;
+            border-radius: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+            color: white;
+        }
+
+            .btn-primary:hover {
+                background: var(--primary-dark);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(4, 113, 35, 0.3);
+            }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+            .btn-outline:hover {
+                background: rgba(4, 113, 35, 0.15); /* زيادة وضوح اللون عند المرور */
+                color: var(--primary-dark);
+                border-color: var(--primary-dark);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 10px rgba(4, 113, 35, 0.2); /* إضافة ظل ناعم */
+            }
+
+        .btn-danger {
+            background: #e74a3b;
+            color: white;
+            border: none;
+        }
+
+            .btn-danger:hover {
+                background: #c0392b;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 12px rgba(231, 74, 59, 0.3);
+            }
+
+        /* Responsive Design */
+        @@media (max-width: 768px) {
+            .profile-card {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-sidebar {
+                padding: 2rem 1.5rem;
+            }
+
+            .profile-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Animations */
+        @@keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.3s;
+        }
+    </style>
+    <style>
+        .btn-edit-link {
+            display: flex;
+            align-items: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--primary-color); /* forest green */
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+            .btn-edit-link:hover {
+                color: var(--primary-dark);
+                transform: translateY(-1px);
+            }
+
+            .btn-edit-link i {
+                font-size: 1.1rem;
+                color: var(--primary-color);
+                transition: transform 0.2s ease;
+            }
+
+            .btn-edit-link:hover i {
+                transform: scale(1.1);
+            }
+
+        .btn-modern-glass {
+            margin-left:22px;
+            background: rgba(4, 113, 35, 0.12);
+            border: 1px solid rgba(4, 113, 35, 0.3);
+            color: #035a1c;
+            padding: 0.6rem 1.2rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border-radius: 12px;
+            text-decoration: none;
+            display: flex; /* تغيير من inline-flex إلى flex */
+            justify-content: center; /* أفقياً */
+            align-items: center; /* عمودياً */
+            text-align: center;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            min-height: 40px; /* خيار إضافي لضمان تمركز النص إذا احتجت */
+        }
+
+            .btn-modern-glass:hover {
+                background-color: #047123;
+                color: white;
+                box-shadow: 0 6px 18px rgba(4,113,35,0.3);
+                transform: translateY(-2px);
+            }
+
+            .btn-modern-glass i {
+                font-size: 1rem;}
+    </style>
+
+
+</body>
+</html>

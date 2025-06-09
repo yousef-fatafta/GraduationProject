@@ -1,0 +1,232 @@
+﻿@model IEnumerable<Onlink.Models.Post>
+@using Onlink.Models
+@{
+    ViewData["Title"] = "Posts";
+
+    Layout = "_Layout";
+}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Onlink</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body class="page-transition">
+    <br />
+    <div class="container">
+        <h2 class="text-center mb-4">
+            <span style="border-bottom: 3px solid var(--primary-color); padding-bottom: 0.25rem;">Latest Posts</span>
+        </h2>
+
+        @foreach (var post in Model)
+
+        {
+            <div class="glass-container">
+                <div class="post-header">
+                    @if (post.Employee != null)
+                    {
+                        <span>@post.Employee.FirstName @post.Employee.LastName</span>
+                    }
+                    else if (post.Employer != null)
+                    {
+                        <span>@post.Employer.Name</span>
+                        <p style="font-size:13.3px;margin-top:2px;margin-bottom:-5px;">Employer</p>
+                    }
+                </div>
+                <div class="post-meta">
+                    <span>@post.CreatedAt.ToLocalTime().ToString("g")</span> • <span>@post.ActivityType</span> • <span>@post.Privacy</span>
+                </div>
+                <div class="info-value">
+                    @Html.Raw(post.Text)
+                </div>
+
+
+
+
+                @if (!string.IsNullOrEmpty(post.MediaUrl))
+
+                {
+
+                    if (post.MediaType == MediaType.Image)
+
+                    {
+                        <img src="@post.MediaUrl" class="post-media" alt="Post Image" />
+                    }
+
+                    else if (post.MediaType == MediaType.Video)
+
+                    {
+                        <video class="post-media" controls>
+                            <source src="@post.MediaUrl" type="video/mp4" />
+                            Your browser does not support the video tag.
+                        </video>
+                    }
+
+                }
+
+                <div class="icon-bar mt-3">
+                    <i class="fas fa-heart text-danger like-btn" data-post-id="@post.PostId"></i>
+                    <span class="like-count" id="like-count-@post.PostId">@post.LikeCount</span>
+                    <i class="fas fa-comment"></i> @post.CommentCount
+                    <i class="fas fa-share"></i> @post.ShareCount
+                </div>
+            </div>
+        }
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".like-btn").click(function () {
+                const postId = $(this).data("post-id");
+                const countSpan = $("#like-count-" + postId);
+
+                $.post("/Dashboards/LikePost", { id: postId }, function (data) {
+                    if (data.success) {
+                        countSpan.text(data.likeCount);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+<style>
+    .post-card {
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border-radius: 20px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        transition: all 0.3s ease-in-out;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        
+    }
+
+        .post-card:hover {
+            transform: scale(1.01);
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.12);
+        }
+
+    .post-header {
+        font-weight: 600;
+        font-size: 1.1rem;
+        color: #1a1a1a;
+        margin-bottom: 0.25rem;
+    }
+
+    .post-meta {
+        font-size: 0.875rem;
+        color: #666;
+        margin-bottom: 1rem;
+    }
+
+    .post-media {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+    }
+
+    .post-actions {
+        display: flex;
+        gap: 1rem;
+        color: #555;
+        font-size: 1rem;
+    }
+
+        .post-actions i {
+            margin-right: 5px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+            .post-actions i:hover {
+                color: var(--primary-color);
+            }
+
+    :root {
+        --primary-color: #047123;
+        --primary-dark: #035a1c;
+        --glass-blur: 12px;
+        --glass-opacity: 0.25;
+    }
+
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        font-family: 'Raleway', sans-serif;
+        margin: 0;
+        padding: 2rem;
+    }
+
+    .glass-container {
+        background: rgba(255, 255, 255, var(--glass-opacity));
+        backdrop-filter: blur(var(--glass-blur));
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        width:80%;
+        margin-left: 10%;
+    }
+
+    .post-header {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .post-meta {
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .post-media {
+        max-width: 100%;
+        border-radius: 10px;
+        margin-top: 1rem;
+    }
+
+    .icon-bar {
+        margin-top: 1rem;
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        font-weight: 500;
+    }
+
+        .icon-bar i {
+            margin-right: 6px;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease;
+        }
+
+            .icon-bar i:hover {
+                transform: scale(1.15);
+            }
+
+    .page-transition {
+        animation: fadeIn 0.5s ease;
+    }
+
+    @@keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>

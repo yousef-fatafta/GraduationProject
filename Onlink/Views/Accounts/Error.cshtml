@@ -1,0 +1,112 @@
+﻿@{
+    Layout = "_Layout";
+}
+<!DOCTYPE html>
+<html data-bs-theme="light" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Page Not Found - Onlink</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800&amp;display=swap">
+    <link rel="apple-touch-icon" sizes="57x57" href="/favicon.ico" style="border-radius:30px">
+
+    <style>
+        :root {
+            --primary-color: #047123;
+            --primary-dark: #035a1c;
+            --glass-blur: 12px;
+            --glass-opacity: 0.25;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Raleway', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, var(--glass-opacity));
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(var(--glass-blur));
+            -webkit-backdrop-filter: blur(var(--glass-blur));
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(4, 113, 35, 0.2);
+        }
+
+        .page-transition {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @@keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .not-found-img {
+            max-height: 400px;
+            width: auto;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+        }
+    </style>
+</head>
+
+<body class="page-transition">
+
+    <section class="py-5 my-5">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="glass-container text-center">
+                        <div class="mb-4">
+                            <img src="~/css/logo2.jpg" class="not-found-img" alt="Brand Logo">
+                        </div>
+                        <h2 class="display-5 fw-bold mb-3" style="color: var(--primary-color);">
+                            <span style="border-bottom: 3px solid var(--primary-color); padding-bottom: 0.25rem;">
+                                Page Not Found
+                            </span>
+                        </h2>
+                        <p class="fs-5 mb-4">The page you're looking for doesn't exist or has been moved.</p>
+                        <a href="/" class="btn btn-primary shadow px-4">
+                            <i class="fas fa-home me-2"></i> Return Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="~/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</body>
+
+</html>

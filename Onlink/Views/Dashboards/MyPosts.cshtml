@@ -1,0 +1,206 @@
+﻿@model IEnumerable<Onlink.Models.Post>
+@{
+    ViewData["Title"] = "My Posts";
+
+
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - Onlink</title>
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&display=swap" />
+    <style>
+        :root {
+            --primary-color: #047123;
+            --glass-blur: 12px;
+            --glass-opacity: 0.22;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Raleway', sans-serif;
+            padding: 2rem;
+        }
+
+        .container.custom-container {
+            max-width: 730px; /* 880 - 150 = 730 */
+            min-height: calc(100vh - 150px); /* تقليص الارتفاع العام */
+            margin: auto;
+        }
+
+        .post-card {
+            background: rgba(255, 255, 255, var(--glass-opacity));
+            backdrop-filter: blur(var(--glass-blur));
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 24px rgba(31, 38, 135, 0.15);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: 0.3s ease;
+        }
+
+            .post-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 12px 28px rgba(4, 113, 35, 0.15);
+            }
+
+        .post-header {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .post-meta {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 1rem;
+        }
+
+        .post-media {
+            max-width: 100%;
+            border-radius: 10px;
+            margin-top: 1rem;
+        }
+
+        .icon-bar {
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            color: var(--primary-color);
+        }
+
+            .icon-bar i {
+                margin-right: 10px;
+                cursor: pointer;
+            }
+
+        h2.page-title {
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid var(--primary-color);
+            display: inline-block;
+        }
+
+        .btn-modern-glass {
+            background: rgba(4, 113, 35, 0.12);
+            border: 1px solid rgba(4, 113, 35, 0.3);
+            color: #035a1c;
+            padding: 0.4rem 0.9rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 12px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            backdrop-filter: blur(8px);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+            .btn-modern-glass:hover {
+                background-color: #047123;
+                color: white;
+                box-shadow: 0 6px 18px rgba(4,113,35,0.3);
+                transform: translateY(-2px);
+            }
+
+            .btn-modern-glass i {
+                font-size: 1rem;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="container custom-container">
+        <h2 class="page-title mt-3">My Posts</h2>
+
+        @if (!Model.Any())
+
+
+
+        {
+            <p class="text-center text-muted">You haven't posted anything yet.</p>
+        }
+
+        @foreach (var post in Model)
+
+
+
+        {
+            <div class="post-card">
+                <div class="post-header">
+                    @if (post.Employee != null)
+                    {
+                        <span>@post.Employee.FirstName @post.Employee.LastName</span>
+                        <a asp-controller="Dashboards" asp-action="EditPost" asp-route-id="@post.PostId" class="btn-modern-glass">
+                            <i class="fas fa-pen-to-square me-2"></i> Edit Post
+                        </a>
+                    }
+                    else if (post.Employer != null)
+                    {
+                        <span>@post.Employer.Name</span>
+                        <a asp-controller="Dashboards" asp-action="EditPost" asp-route-id="@post.PostId" class="btn-modern-glass">
+                            <i class="fas fa-pen-to-square me-2"></i> Edit Post
+                        </a>
+                    }
+                </div>
+
+                <div class="post-meta">
+                    <span>@post.CreatedAt.ToLocalTime().ToString("g")</span> • <span>@post.ActivityType</span> • <span>@post.Privacy</span>
+                </div>
+
+                @if (!string.IsNullOrEmpty(post.MediaUrl))
+
+
+
+                {
+
+
+
+                    if (post.MediaType == MediaType.Image)
+
+
+
+                    {
+                        <img src="@post.MediaUrl" alt="Post Image" class="post-media" />
+                    }
+
+
+
+                    else if (post.MediaType == MediaType.Video)
+
+
+
+                    {
+                        <video controls class="post-media">
+                            <source src="@post.MediaUrl" type="video/mp4" />
+                            Your browser does not support the video tag.
+                        </video>
+                    }
+
+
+
+                }
+
+                <div class="icon-bar">
+                    <i class="fas fa-heart"></i> @post.LikeCount
+                    <i class="fas fa-comment"></i> @post.CommentCount
+                    <i class="fas fa-share"></i> @post.ShareCount
+                </div>
+            </div>
+        }
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

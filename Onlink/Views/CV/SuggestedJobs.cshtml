@@ -1,0 +1,165 @@
+﻿@model List<(Onlink.Models.Job job, string decision)>
+@{
+    ViewData["Title"] = "Suggested Jobs";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - Onlink</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+        :root {
+            --primary-color: #047123;
+            --primary-dark: #035a1c;
+            --glass-blur: 12px;
+            --glass-opacity: 0.22;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Raleway', sans-serif;
+            padding: 2rem;
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, var(--glass-opacity));
+            backdrop-filter: blur(var(--glass-blur));
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 24px rgba(31, 38, 135, 0.15);
+            padding: 2rem;
+            transition: transform 0.2s ease;
+        }
+
+        .glass-container:hover {
+            transform: translateY(-4px);
+        }
+
+        .section-title {
+            text-align: center;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid var(--primary-color);
+            display: inline-block;
+        }
+
+        .match-score {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .job-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .job-description {
+            font-size: 1rem;
+            color: #555;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .glass-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 20px;
+            color: #333;
+            transition: all 0.3s ease-in-out;
+        }
+
+            .glass-container:hover {
+                transform: scale(1.01);
+                box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            }
+    </style>
+</head>
+<body>
+    <div class="container mt-5">
+        <h2 class="section-title text-center mb-4">🧠 Jobs Suggested For You</h2>
+
+        @if (Model == null || !Model.Any())
+
+        {
+            <div class="glass-container text-center p-4 mt-4" style="backdrop-filter: blur(10px); border-radius: 20px;  background-color: #047123; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2); color: #fff;">
+                <i class="fas fa-exclamation-circle fa-lg mb-2" style="color: #ffcc00;"></i>
+                <p class="mb-0 fw-semibold" style="font-size: 1rem;">
+                    No strong matches found.<br /> Try improving your resume or uploading one.
+                </p>
+            </div>
+
+        }
+
+        else
+
+        {
+
+            foreach (var item in Model)
+
+            {
+                <div class="glass-container mb-4 p-4 shadow-sm rounded-4">
+                    <h4 class="job-title mb-2">@item.job.JobName</h4>
+
+                    <p class="job-description text-muted mb-2">
+                        @item.job.JobDescription
+                    </p>
+
+                    <p class="match-score fw-semibold text-success">
+                        AI Decision: <span class="text-dark">@item.decision</span>
+                    </p>
+
+                    <a asp-controller="Dashboards" onclick="applyJob(@item.job.JobId)"
+                       asp-action="ApplyJob"
+                       asp-route-id="@item.job.JobId"
+                       class="btn btn-primary btn-sm mt-2 rounded-pill">
+                        <i class="fas fa-paper-plane me-1"></i> Apply Now
+                    </a>
+                </div>
+            }
+
+        }
+    </div>
+</body>
+<script>
+    function applyJob(jobId) {
+        const token = $('#__RequestVerificationToken').val();
+        $.ajax({
+            type: "POST",
+            url: "/Dashboards/ApplyJob",
+            headers: { "RequestVerificationToken": token },
+            data: { jobId: jobId },
+            success: function (response) {
+                const alertBox = document.createElement("div");
+                alertBox.className = "custom-alert" + (response.success ? "" : " error");
+                alertBox.textContent = response.success ? "✅ Job applied successfully!" : "❌ " + response.message;
+                document.body.appendChild(alertBox);
+                setTimeout(() => alertBox.remove(), 2500);
+                if (response.success) location.reload();
+            },
+            error: function () {
+                const alertBox = document.createElement("div");
+                alertBox.className = "custom-alert error";
+                alertBox.textContent = "❌ Server error occurred.";
+                document.body.appendChild(alertBox);
+                setTimeout(() => alertBox.remove(), 2500);
+            }
+        });
+    }
+</script>
+</html>
